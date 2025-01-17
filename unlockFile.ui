@@ -78,6 +78,25 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
       <height>17</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Esta opción permite que se desbloqueen todas las páginas de todos los archivos del directorio o carpeta seleccionado.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="text">
+     <string>Una carpeta</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="multipleFiles">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>30</y>
+      <width>101</width>
+      <height>17</height>
+     </rect>
+    </property>
     <property name="text">
      <string>Varios archivos</string>
     </property>

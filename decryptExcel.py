@@ -37,7 +37,7 @@ class MainWindow(QDialog):
 
     def setFileSettings(self):
         """ Habilita o deshabilita las opciones de la GUI dependiendo de la primer elección de opciones como:
-        desbloquear un archivo o varios archivos."""
+        desbloquear un archivo, varios archivos o un conjunto de archivos."""
         logging.info("Setting file options")
         self.optionFiles.setEnabled(False)
         self.unlockFile.setEnabled(True)
@@ -48,6 +48,10 @@ class MainWindow(QDialog):
             self.intervalLabel.setEnabled(False)
             self.rangeSheets.setEnabled(False)
             self.clearInputRange.setEnabled(False)
+        elif self.multipleFiles.isChecked():
+            self.intervalLabel.setEnabled(True)
+            self.rangeSheets.setEnabled(True)
+            self.clearInputRange.setEnabled(True)
         else:
             self.intervalLabel.setEnabled(True)
             self.rangeSheets.setEnabled(True)
@@ -59,10 +63,14 @@ class MainWindow(QDialog):
                 fname = QFileDialog.getOpenFileName(self, caption=caption, filter=filterSheet)
                 self.inputFile.setText(fname[0])
                 logging.info(f"Selected file: {fname[0]}")
-            if self.manyFiles.isChecked():
+            elif self.manyFiles.isChecked():
                 directory = QFileDialog.getExistingDirectory(self, caption="Seleccionar directorio")
                 self.inputFile.setText(directory)
                 logging.info(f"Selected directory: {directory}")
+            elif self.multipleFiles.isChecked():
+                fnames, _ = QFileDialog.getOpenFileNames(self, caption=caption, filter=filterSheet)
+                self.inputFile.setText(";".join(fnames))
+                logging.info(f"Selected files: {fnames}")
         except Exception as e:
             logging.error(f"Error browsing files: {e}")
 
@@ -76,6 +84,9 @@ class MainWindow(QDialog):
             if self.manyFiles.isChecked() and not file_path:
                 self.messageText.setText("Seleccione un directorio")
                 return
+            if self.multipleFiles.isChecked() and not file_path:
+                self.messageText.setText("Seleccione los archivos")
+                return
             if self.oneFile.isChecked() and (file_path != "" or range_sheets != ""):
                 self.process_single_file(file_path, range_sheets)
             elif self.manyFiles.isChecked():
@@ -83,18 +94,27 @@ class MainWindow(QDialog):
                     for file in files:
                         if file.endswith(".xlsx"):
                             full_path = os.path.join(root, file)
-                            self.process_single_file(full_path, range_sheets)
+                            self.process_single_file(full_path)
                 self.messageText.setText(
                     f"Todos los archivos en el directorio {file_path} han sido desbloqueados con éxito.")
+            elif self.multipleFiles.isChecked():
+                files = file_path.split(";")
+                for file in files:
+                    self.process_single_file(file, range_sheets)
+                self.messageText.setText("Todos los archivos seleccionados han sido desbloqueados con éxito.")
         except Exception as e:
             logging.error(f"Error unlocking files: {e}")
             self.messageText.setText("Ocurrió un error al intentar desbloquear los archivos.")
 
-    def process_single_file(self, file_path, range_sheets):
+    def process_single_file(self, file_path, range_sheets=None):
         try:
             if not os.path.exists(file_path):
                 self.messageText.setText(f"El archivo {file_path} no existe.")
                 return
+            if range_sheets is None or range_sheets == "":
+                # Desbloquear todas las hojas
+                range_sheets = ",".join(map(str, range(1, self.sheetsLength(file_path) + 1)))
+                logging.info(f"range_sheets: {range_sheets}")
             if self.inputFormatValidator(range_sheets):
                 if self.inputRangeValidator(range_sheets) and self.rangeSheetsValidator(file_path, range_sheets):
                     logging.info("Validations passed")
@@ -103,7 +123,7 @@ class MainWindow(QDialog):
                         logging.info("Extension changed")
                         unzipped_directory = self.extractZip(file_path_zip)
                         logging.info("Extraction completed")
-                        self.modifySheets(unzipped_directory)
+                        self.modifySheets(unzipped_directory, range_sheets)
                         logging.info("Sheets modified")
                         file_compressed_zip_format = self.compressandcreate(file_path_zip, unzipped_directory)
                         file_unlocked_xlsx_format = self.changeExtension(file_compressed_zip_format,
@@ -115,6 +135,9 @@ class MainWindow(QDialog):
                             f"Se detectó que quiere volver a desbloquear el archivo {file_path}. \n "
                             "Primero elimine el siguiente archivo antes de continuar: " +
                             os.path.splitext(file_path)[0] + MainWindow.ext_zip)
+            else:
+                self.messageText.setText("Error en la validación del formato de entrada.")
+                return
         except Exception as e:
             logging.error(f"Error unlocking file {file_path}: {e}")
             self.messageText.setText(f"Ocurrió un error al intentar desbloquear el archivo {file_path}.")
@@ -211,6 +234,7 @@ class MainWindow(QDialog):
         logging.info(f"input_string: {input_string}")
         input_list = input_string.split(",")
         processed_list = []
+        logging.info("antes del for process_string")
         for i in input_list:
             if "-" in i:
                 start, end = map(int, i.split("-"))
@@ -232,9 +256,9 @@ class MainWindow(QDialog):
             return 0
         try:
             xl = pd.ExcelFile(file)
-            print("xl.sheet_names: ", xl.sheet_names)
+            logging.info(f"xl.sheet_names:  {xl.sheet_names}")
             npag = len(xl.sheet_names)
-            print("npag: ", npag)
+            logging.info(f"npag:  {npag}")
             return npag
         except Exception as e:
             logging.error(f"Error reading Excel file: {e}")
@@ -243,27 +267,27 @@ class MainWindow(QDialog):
     def rangeSheetsValidator(self, file_path, range_sheets):
         logging.info("Validating range sheets")
         npag = self.sheetsLength(file_path)
-        print(npag)
-        print("Values: ", range_sheets)
+        logging.info(f"npag: {npag}")
+        logging.info(f"Values: {range_sheets}")
         output_values = self.process_string(range_sheets)
-        print("output_values: ", output_values)
-        print("output_values_type: ", type(output_values))
-        print("Págs: ", output_values)
+        logging.info(f"output_values: {output_values}")
+        logging.info(f"output_values_type:  {type(output_values)}")
+        logging.info(f"Págs:  {output_values}")
         last_page = int(output_values[-1])
-        print("last_page: ", type(last_page))
-        print("npag: ", type(npag))
+        logging.info(f"last_page:  {type(last_page)}")
+        logging.info(f"npag:  {type(npag)}")
         if last_page > npag:
             self.messageText.setText(
                 "Alguna página ingresada excede la cantidad real de páginas del documento.\n Cant. Pág. del Doc: " + str(npag))
             return False
         return True
 
-    def modifySheets(self, zip_directory):
+    def modifySheets(self, zip_directory, range_sheets):
         logging.info(f"Modifying sheets in directory: {zip_directory}")
         try:
             zip_directory_path = zip_directory + "/xl/worksheets"
             logging.info(f"modifySheets zip_directory_path: {zip_directory_path}")
-            range_sheets = self.rangeSheets.text()
+            # range_sheets = self.rangeSheets.text()
             sheets = self.process_string(range_sheets)
             logging.info(f"modify sheets: {sheets}")
             files = os.listdir(zip_directory_path)
@@ -275,7 +299,7 @@ class MainWindow(QDialog):
                 for nsheet in range(len(xml_files)):
                     result = xml_files[nsheet].split('sheet')[1].split('.xml')[0]
                     logging.info(f"Hoja n°: {result}")
-                    if int(result) == sheet:
+                    if result.isdigit() and int(result) == sheet:
                         logging.info("coincide")
                         mfile = xml_files[nsheet]
                         logging.info(f"mfile: {mfile}")
