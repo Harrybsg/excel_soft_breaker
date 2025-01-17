@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>mainDialog</class>
+ <widget class="QDialog" name="mainDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>545</width>
+    <height>461</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget#mainDialog{
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(9, 174, 174, 255), stop:0.403409 rgba(176, 215, 235, 255), stop:0.98 rgba(173, 239, 72, 255), stop:1 rgba(0, 0, 0, 0));}</string>
+  </property>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>20</y>
+     <width>521</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Elija entre desbloquear un archivo, varios archivos, una hoja o varias hojas:</string>
+   </property>
+  </widget>
+  <widget class="QGroupBox" name="optionFiles">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>50</y>
+     <width>511</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="title">
+    <string>Opciones de desbloqueo</string>
+   </property>
+   <widget class="QRadioButton" name="oneFile">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>82</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Un archivo</string>
+    </property>
+    <property name="checked">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="manyFiles">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>30</y>
+      <width>101</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Varios archivos</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="Line" name="line">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>160</y>
+     <width>521</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="lineWidth">
+    <number>3</number>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QGroupBox" name="fileGroup">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>180</y>
+     <width>511</width>
+     <height>141</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="title">
+    <string>Cargar selección</string>
+   </property>
+   <widget class="QPushButton" name="uploadChoice">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string>Cargar</string>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>icons/file.png</normaloff>icons/file.png</iconset>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="inputFile">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>30</y>
+      <width>371</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="intervalLabel">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>100</y>
+      <width>111</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">Color: rgb(0, 0, 0)</string>
+    </property>
+    <property name="text">
+     <string>Intervalo de hojas</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="rangeSheets">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>90</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ingrese las páginas a desbloquear. &lt;br/&gt;Permitido: 1,2,3-5.&lt;br/&gt;No permitido: 7-2, 4-1&lt;br/&gt;No permitido: 1- o 1,&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="inputMethodHints">
+     <set>Qt::ImhFormattedNumbersOnly|Qt::ImhPreferNumbers</set>
+    </property>
+    <property name="maxLength">
+     <number>30</number>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="clearInputRange">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>250</x>
+      <y>90</y>
+      <width>31</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Borrar el rango de hojas ingresado.</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>icons/eraser.png</normaloff>
+      <normalon>icons/eraser_color.png</normalon>icons/eraser.png</iconset>
+    </property>
+   </widget>
+   <zorder>uploadChoice</zorder>
+   <zorder>inputFile</zorder>
+   <zorder>rangeSheets</zorder>
+   <zorder>clearInputRange</zorder>
+   <zorder>intervalLabel</zorder>
+  </widget>
+  <widget class="QPushButton" name="unlockFile">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>420</y>
+     <width>101</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string>Desbloquear</string>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>icons/unlock.png</normaloff>icons/unlock.png</iconset>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="continuar">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>130</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string>Continuar</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="messageText">
+   <property name="geometry">
+    <rect>
+     <x>36</x>
+     <y>369</y>
+     <width>481</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="cleanOptionFiles">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>330</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string>Limpiar</string>
+   </property>
+  </widget>
+  <zorder>label</zorder>
+  <zorder>optionFiles</zorder>
+  <zorder>line</zorder>
+  <zorder>unlockFile</zorder>
+  <zorder>continuar</zorder>
+  <zorder>messageText</zorder>
+  <zorder>cleanOptionFiles</zorder>
+  <zorder>fileGroup</zorder>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>cleanOptionFiles</sender>
+   <signal>clicked()</signal>
+   <receiver>inputFile</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>473</x>
+     <y>349</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>413</x>
+     <y>225</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cleanOptionFiles</sender>
+   <signal>clicked()</signal>
+   <receiver>rangeSheets</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>452</x>
+     <y>342</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>218</x>
+     <y>295</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>clearInputRange</sender>
+   <signal>clicked()</signal>
+   <receiver>rangeSheets</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>289</x>
+     <y>283</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>243</x>
+     <y>289</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cleanOptionFiles</sender>
+   <signal>clicked()</signal>
+   <receiver>messageText</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>506</x>
+     <y>346</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>356</x>
+     <y>396</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
