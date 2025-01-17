@@ -17,7 +17,7 @@ class MainWindow(QDialog):
         Initializes the main window, sets up the UI components and connects signals to slots.
         """
         super(MainWindow, self).__init__()
-        uic.loadUi("unlockFile.ui", self)
+        uic.loadUi("ui/unlockFile.ui", self)
         self.file_processor = FileProcessor()
         self.setup_ui()
 
